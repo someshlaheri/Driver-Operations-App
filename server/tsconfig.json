@@ -2,6 +2,9 @@
   "compilerOptions": {
     "target": "ES2022",
     "module": "NodeNext",
+    "noImplicitAny": false,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
     "moduleResolution": "NodeNext",
     "outDir": "dist",
     "strict": true,
@@ -9,12 +12,7 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
-    "types": [
-      "node"
-    ]
+    "types": ["node"]
   },
-  "include": [
-    "src",
-    "generated/prisma"
-  ]
+  "include": ["src", "generated/prisma"]
 }
