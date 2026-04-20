@@ -1,0 +1,89 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  ADMIN
+  DRIVER
+}
+
+enum ClaimStatus {
+  CLAIMED
+  STARTED
+  COMPLETED
+}
+
+enum InspectionReviewStatus {
+  PENDING
+  APPROVED
+  FLAGGED
+}
+
+model User {
+  id           String              @id @default(cuid())
+  name         String
+  email        String              @unique
+  passwordHash String
+  role         Role
+  createdAt    DateTime            @default(now())
+  shiftClaims  ShiftClaim[]
+  inspections  VehicleInspection[]
+}
+
+model Shift {
+  id        String       @id @default(cuid())
+  title     String
+  date      DateTime
+  startTime String
+  endTime   String
+  location  String
+  capacity  Int          @default(1)
+  notes     String?
+  createdAt DateTime     @default(now())
+  claims    ShiftClaim[]
+
+  @@index([date])
+}
+
+model ShiftClaim {
+  id         String             @id @default(cuid())
+  shiftId    String
+  driverId   String
+  status     ClaimStatus        @default(CLAIMED)
+  claimedAt  DateTime           @default(now())
+  startedAt  DateTime?
+  endedAt    DateTime?
+  shift      Shift              @relation(fields: [shiftId], references: [id], onDelete: Cascade)
+  driver     User               @relation(fields: [driverId], references: [id], onDelete: Cascade)
+  inspection VehicleInspection?
+
+  @@unique([shiftId, driverId])
+  @@index([driverId])
+  @@index([status])
+}
+
+model VehicleInspection {
+  id           String                 @id @default(cuid())
+  claimId      String                 @unique
+  driverId     String
+  vehicleNumber String
+  mileage      Int
+  fuelPercent  Int
+  cleanliness  Int
+  issues       String
+  reviewStatus InspectionReviewStatus @default(PENDING)
+  reviewNotes  String?
+  photoData    Bytes
+  photoMimeType String
+  submittedAt  DateTime               @default(now())
+  claim        ShiftClaim             @relation(fields: [claimId], references: [id], onDelete: Cascade)
+  driver       User                   @relation(fields: [driverId], references: [id], onDelete: Cascade)
+
+  @@index([submittedAt])
+  @@index([reviewStatus])
+}
