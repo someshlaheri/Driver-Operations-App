@@ -9,8 +9,8 @@ export function LoginPage() {
   const { login, user } = useAuth();
   useDocumentTitle("Sign In");
   const [form, setForm] = useState({
-    email: "driver1@driverops.dev",
-    password: "Driver@123",
+    email: "",
+    password: "",
   });
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -44,14 +44,14 @@ export function LoginPage() {
           upload inspection details, while admins monitor coverage and review compliance.
         </p>
         <div className="auth-note-list">
-          <div className="auth-note-card">
+          {/* <div className="auth-note-card">
             <strong>Driver demo</strong>
             <span>driver1@driverops.dev / Driver@123</span>
           </div>
           <div className="auth-note-card">
             <strong>Admin demo</strong>
             <span>admin@driverops.dev / Admin@123</span>
-          </div>
+          </div> */}
           <div className="auth-note-card">
             <strong>Typical flow</strong>
             <span>Claim a shift, start work, submit inspection evidence, and close the shift.</span>
